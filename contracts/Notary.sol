@@ -8,19 +8,19 @@ contract Notary {
       uint blockNumber;
   }
 
-  mapping (bytes32 => Record) private docHashes;
+  mapping (string => Record) private docHashes;
 
   function Notary() public {
     // constructor
   }
 
-  function addDocHash (bytes32 hash) public {
+  function addDocHash (string hash) public {
     Record memory newRecord = Record(now, block.number);
     docHashes[hash] = newRecord;
 
   }
 
-  function findDocHash (bytes32 hash) public constant returns(uint, uint) {
+  function findDocHash (string hash) public constant returns(uint, uint) {
     return (docHashes[hash].mineTime, docHashes[hash].blockNumber);
   }
 
