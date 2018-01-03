@@ -4,31 +4,70 @@ const fs = require("fs");
 
 let web3 = undefined;
 let contract = undefined;
-let address = undefined;
-let abi = undefined;
 
 function init () {
   //set up network
-  let provider = new Web3.providers.HttpProvider("http://localhost:7545");
+  let provider = new Web3.providers.HttpProvider("http://localhost:8545");
   web3 = new Web3(provider);
 
-  //obtain contract abi
-  let notaryDef = require("../build/contracts/Notary.json");
-  abi = notaryDef.abi;
+  //contract abi
+  let abi = [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "hash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addDocHash",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "hash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "findDocHash",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ];
 
   //asign contract address
-  address = "0x345ca3e014aaf5dca488057592ee47305d9b3e10";
+  let address = "0xd121f94184Da71908123a1e08F72cAB8573b9363";
 
   //init contract
   contract = new web3.eth.Contract(abi, address);
-
 };
 
 //get a SHA-256 hash from a file --> works synchronously
 function calculateHash (fileName) {
   let fileContent = fs.readFileSync(fileName);
   return calculateHashBytes(fileContent);
-
 };
 
 //get a SHA-256 hash from a data Buffer --> works synchronously
@@ -53,7 +92,6 @@ function sendHash (hash, callback) {
 
 //looks up a hash on the blockchain
 function findHash (hash, callback) {
-
   contract.methods.findDocHash(hash).call( function (error, result) {
     if (error) callback(error, null);
     else {
@@ -64,8 +102,6 @@ function findHash (hash, callback) {
       callback(null, resultObj);
     }
   });
-
-
 };
 
 let NotaryExports = {
