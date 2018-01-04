@@ -1,4 +1,4 @@
-# Developing an Ethereum Document Certification Application
+# Ethereum Development Guide
 
 This repository holds the source code for the tutorials at:
 
