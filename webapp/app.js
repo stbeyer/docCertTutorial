@@ -19,7 +19,6 @@ function hashForFile(callback) {
     };
     fr.readAsArrayBuffer(file);
   }
-
 };
 
 function send () {
